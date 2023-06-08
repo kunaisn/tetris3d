@@ -8,7 +8,7 @@ const charLongLineGeometry = new THREE.PlaneGeometry(2, 0.3);
 const charLineMaterial = new THREE.LineBasicMaterial( { color: 0x222222 } );
 
 // 「W」の文字
-export function createCharW() {
+export function makeCharW() {
     const charGroup = new THREE.Group;
     {
         const charLine = new THREE.Mesh(charLineGeometry, charLineMaterial);
@@ -50,7 +50,7 @@ export function createCharW() {
 }
 
 // 「S」の文字
-export function createCharS() {
+export function makeCharS() {
     const charGroup = new THREE.Group;
     {
         const charLine = new THREE.Mesh(charLineGeometry, charLineMaterial);
@@ -95,7 +95,7 @@ export function createCharS() {
 }
 
 // 「A」の文字
-export function createCharA() {
+export function makeCharA() {
     const charGroup = new THREE.Group;
     {
         const charLine = new THREE.Mesh(charLongLineGeometry, charLineMaterial);
@@ -124,7 +124,7 @@ export function createCharA() {
     return charGroup;
 }
 
-export function createCharD() {
+export function makeCharD() {
     const charGroup = new THREE.Group;
     {
         const charLine = new THREE.Mesh(charLongLineGeometry, charLineMaterial);
@@ -161,4 +161,78 @@ export function createCharD() {
         charGroup.add(charLine);
     }
     return charGroup;
+}
+
+export function makeGrid() {
+    // グリットの描画
+  const solidGridLine = new THREE.Group;
+  // Y軸の面
+  for(let k=0; k<2; k++) {
+    const flatGlidLine = new THREE.Group;
+    for(let i=0; i<=5; i++) {
+      const lineGeometry = new THREE.PlaneGeometry(5, 0.02);
+      const lineMaterial = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+      const lineX = new THREE.Mesh(lineGeometry, lineMaterial);
+      lineX.rotation.x = -0.5 * Math.PI;
+      lineX.position.z = 2.5 - i;
+      lineX.receiveShadow = true;
+      flatGlidLine.add(lineX);
+      const lineZ = new THREE.Mesh(lineGeometry, lineMaterial);
+      lineZ.rotation.y = 0.5 * Math.PI;
+      lineZ.position.x = 2.5 - i;
+      lineZ.receiveShadow = true;
+      flatGlidLine.add(lineZ);
+    }
+    flatGlidLine.position.y = k*5;
+    solidGridLine.add(flatGlidLine);
+  }
+  // Z軸の面
+  for(let k=0; k<2; k++) {
+    const flatGlidLine = new THREE.Group;
+    for(let i=1; i<5; i++) {
+      const lineGeometry = new THREE.PlaneGeometry(5, 0.02);
+      const lineMaterial = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+      const lineX = new THREE.Mesh(lineGeometry, lineMaterial);
+      lineX.rotation.z = -0.5 * Math.PI;
+      lineX.position.x = 2.5 - i;
+      lineX.position.y = 2.5;
+      lineX.position.z = -2.5;
+      lineX.receiveShadow = true;
+      flatGlidLine.add(lineX);
+      const lineY = new THREE.Mesh(lineGeometry, lineMaterial);
+      lineY.position.y = 5 - i;
+      lineY.position.z = -2.5;
+      lineY.receiveShadow = true;
+      flatGlidLine.add(lineY);
+    }
+    flatGlidLine.position.z = k*5;
+    solidGridLine.add(flatGlidLine);
+  }
+  // X軸の面
+  for(let k=0; k<2; k++) {
+    const flatGlidLine = new THREE.Group;
+    for(let i=1; i<5; i++) {
+      const lineGeometry = new THREE.PlaneGeometry(5, 0.02);
+      const lineMaterial = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+      const lineX = new THREE.Mesh(lineGeometry, lineMaterial);
+      lineX.rotation.z = -0.5 * Math.PI;
+
+      lineX.position.z = 2.5 - i;
+      lineX.position.y = 2.5;
+      lineX.position.x = -2.5;
+
+      lineX.receiveShadow = true;
+      flatGlidLine.add(lineX);
+
+      const lineY = new THREE.Mesh(lineGeometry, lineMaterial);
+      lineY.rotation.y = 0.5 * Math.PI;
+      lineY.position.y = 5 - i;
+      lineY.position.x = -2.5;
+      lineY.receiveShadow = true;
+      flatGlidLine.add(lineY);
+    }
+    flatGlidLine.position.x = k*5;
+    solidGridLine.add(flatGlidLine);
+  }
+  return solidGridLine
 }
