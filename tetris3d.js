@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { GUI } from "gui";
 import {OrbitControls} from "orbit";
 import { _SRGBAFormat } from "three";
+import { createCharW, createCharS, createCharA, createCharD } from "letter";
 
 // ３Ｄページ作成関数の定義
 function init() {
@@ -115,159 +116,11 @@ function init() {
   stage.add(solidGridLine);
   scene.add(stage);
 
-  // 「W」の文字
-  const charWGroup = new THREE.Group;
-  const charLineGeometry = new THREE.PlaneGeometry(1.5, 0.3);
-  const charShortLineGeometry = new THREE.PlaneGeometry(1, 0.3);
-  const charLongLineGeometry = new THREE.PlaneGeometry(2, 0.3);
-  const charLineMaterial = new THREE.LineBasicMaterial( { color: 0x222222 } );
-  const charLine = new THREE.Mesh(charLineGeometry, charLineMaterial);
-  {
-    const charLine = new THREE.Mesh(charLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = 0.65 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.z = -3.6;
-    charLine.position.x = -0.9;
-    charWGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = 0.35 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.z = -3.7;
-    charLine.position.x = -0.25;
-    charWGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = 0.65 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.z = -3.7;
-    charLine.position.x = 0.25;
-    charWGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = 0.35 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.z = -3.6;
-    charLine.position.x = 0.9;
-    charWGroup.add(charLine);
-  }
-  scene.add(charWGroup);
-
-  // 「S」の文字
-  const charSGroup = new THREE.Group;
-  {
-    const charLine = new THREE.Mesh(charLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.z = 3.0;
-    charSGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.z = 3.8;
-    charSGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.z = 4.7;
-    charSGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charShortLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = 0.5 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.z = 3.4;
-    charLine.position.x = -0.6;
-    charSGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charShortLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = 0.5 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.z = 4.2;
-    charLine.position.x = 0.6;
-    charSGroup.add(charLine);
-  }
-  scene.add(charSGroup);
-
-  // 「A」の文字
-  const charAGroup = new THREE.Group;
-  {
-    const charLine = new THREE.Mesh(charLongLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = 0.65 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.x = -3.3;
-    charAGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charLongLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = 0.35 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.x = -4.1;
-    charAGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charShortLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.x = -3.7;
-    charLine.position.z = 0.2;
-    charAGroup.add(charLine);
-  }
-  scene.add(charAGroup);
-
-  // 「D」の文字
-  const charDGroup = new THREE.Group;
-  {
-    const charLine = new THREE.Mesh(charLongLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = 0.5 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.x = 3.2;
-    charDGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charShortLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = 0.2 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.z = 0.65;
-    charLine.position.x = 3.6;
-    charDGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charShortLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = -0.2 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.z = -0.65;
-    charLine.position.x = 3.6;
-    charDGroup.add(charLine);
-  }
-  {
-    const charLine = new THREE.Mesh(charShortLineGeometry, charLineMaterial);
-    charLine.rotation.x = -0.5 * Math.PI;
-    charLine.rotation.z = 0.5 * Math.PI;
-    charLine.position.y = 0;
-    charLine.position.x = 4.0;
-    charDGroup.add(charLine);
-  }
-  scene.add(charDGroup);
+  // 文字「W、A、S、D」の追加
+  scene.add(createCharW());
+  scene.add(createCharS());
+  scene.add(createCharA());
+  scene.add(createCharD());
 
   // 光源の設定
   const spotLight = new THREE.SpotLight();
