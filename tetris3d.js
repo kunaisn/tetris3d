@@ -5,7 +5,7 @@ import {OrbitControls} from "orbit";
 import { _SRGBAFormat } from "three";
 import { makeCharW, makeCharS, makeCharA, makeCharD, makeGrid } from "letter";
 
-// ３Ｄページ作成関数の定義
+// ３Dページ作成関数の定義
 function init() {
   // 制御変数の定義
   const param = {
@@ -190,18 +190,12 @@ function init() {
   // 積んだブロックの管理　当たり判定用
   let stackBlocksAry = [
     [
-    "-2,-2", "-2,-1","-2,0","-2,1","-2,2",
-    "-1,-2","-1,-1","-1,0","-1,1","-1,2",
-    "0,-2","0,-1","0,0", "0,1", "0,2",
-    "1,-2","1,-1", "1,0", "1,1", "1,2",
-    "2,-2","2,-1", "2,0", "2,1", "2,2"
-  ],
-    [],
-    [],
-    [],
-    [],
-    [],
-    []
+      "-2,-2", "-2,-1","-2,0","-2,1","-2,2",
+      "-1,-2","-1,-1","-1,0","-1,1","-1,2",
+      "0,-2","0,-1","0,0", "0,1", "0,2",
+      "1,-2","1,-1", "1,0", "1,1", "1,2",
+      "2,-2","2,-1", "2,0", "2,1", "2,2"
+  ],[],[],[],[],[],[]
   ];
 
   // 積んだブロックの追加
@@ -292,7 +286,7 @@ function init() {
           }
           score++;
         }
-        sleep(100);
+        sleep(80);
         createBlocks();
       } else {
         speed = 0;
@@ -362,10 +356,8 @@ function init() {
     if(key === 65) mx -= 1;
     if(key === 68) mx += 1;
     blocks.children.forEach((block) => {
-      if( block.position.z + mz > 2 ||
-        block.position.z + mz < -2 ) move = false;
-      if( block.position.x + mx > 2 ||
-        block.position.x + mx < -2 ) move = false;
+      if( block.position.z + mz > 2 || block.position.z + mz < -2 ) move = false;
+      if( block.position.x + mx > 2 || block.position.x + mx < -2 ) move = false;
     });
     if(move) {
       blocks.children.forEach((block) => {
@@ -383,14 +375,13 @@ function init() {
   window.addEventListener("keydown", startGame, false);
 
   // カメラの作成
-  const camera = new THREE.PerspectiveCamera(
-    50, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const camera = new THREE.PerspectiveCamera(50, window.innerWidth/(window.innerHeight*(15/16)), 0.1, 1000);
   camera.position.set(9,9,9);
   camera.lookAt(0,0,0);
 
   // レンダラの設定
   const renderer = new THREE.WebGLRenderer();
-  renderer.setSize(window.innerWidth, innerHeight);
+  renderer.setSize(window.innerWidth, innerHeight*(14/16));
   renderer.setClearColor(0x808080);
   document.getElementById("output").appendChild(renderer.domElement);
 
@@ -398,9 +389,7 @@ function init() {
   const orbitControls = new OrbitControls(camera, renderer.domElement);
   orbitControls.listenToKeyEvents( window );
   orbitControls.enableDamping =true;
-
-  // 描画処理
-
+  
   // 描画関数
   function render() {
     // 座標軸の表示
