@@ -9,5 +9,3 @@
 https://b13b1dc2.tetris3d.pages.dev
 
 上記サイトはリポジトリ内の「index.html」、「letter.js」、「tetris3d.js」を配置したものです。3dゲームのため、パソコンの負荷が高くなります。
- 
-（7月5日に確認したところ、Google Chromeでアクセスした場合に警告が表示されるようになっています。）
