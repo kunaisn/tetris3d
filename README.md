@@ -6,6 +6,6 @@
 
 ブロックの落とす　スペースキー
 
-https://b13b1dc2.tetris3d.pages.dev
+https://tetris3d.kunaisn.net/
 
 上記サイトはリポジトリ内の「index.html」、「letter.js」、「tetris3d.js」を配置したものです。3dゲームのため、パソコンの負荷が高くなります。
