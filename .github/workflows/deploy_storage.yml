@@ -23,7 +23,7 @@ jobs:
         run: gcloud auth activate-service-account --key-file=tmp.json
         
       - name: アップロード
-        run: gsutil -m rsync -r -d . ${{ secrets.GCS_BUCKET_PATH }}
+        run: gsutil -m rsync -r -d ./game/ ${{ secrets.GCS_BUCKET_PATH }}
         
       - name: JSONキーを削除
         run : rm -f tmp.json
