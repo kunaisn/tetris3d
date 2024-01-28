@@ -1,0 +1,28 @@
+name: Deploy to GCP Storage
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: GCPの準備
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_KEY }}
+        
+      - name: GCPサービスアカウントキーをデコード
+        run: echo "${{ secrets.GCP_KEY_BASE64 }}" | base64 -d > temp-sa.json
+        
+      - name: GCPに認証を通す
+        run: gcloud auth activate-service-account --key-file=temp-sa.json
+        
+      - name: アップロード
+        run: gsutil -m rsync -r -d ${{ env.JSON_DIR }} ${{ secrets.GCS_BUCKET_PATH }}/${{ env.JSON_DIR }}
+        
+      - name: 一次ファイルを削除
+        run : rm -f temp-sa.json
