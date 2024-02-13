@@ -1,0 +1,25 @@
+substitutions:
+  _IMAGE: 'tetris3d'
+  _SERVICE_NAME: 'tetris3d'
+  _REGION: 'asia-northeast1'
+
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_IMAGE', '.']
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$_IMAGE']
+
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args:
+  - 'run'
+  - 'deploy'
+  - '$_SERVICE_NAME'
+  - '--image'
+  - 'gcr.io/$PROJECT_ID/$_IMAGE'
+  - '--region'
+  - '$_REGION'
+
+images:
+- 'gcr.io/$PROJECT_ID/$_IMAGE'

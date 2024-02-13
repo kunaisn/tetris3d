@@ -161,10 +161,20 @@ class Tetris3D {
     getMoveableBlocks = () => {
         const moveableBlocks = new THREE.Group();
         // ランダムで7種類の形のどれかを選択する
-        let TypeOfBlocks = Math.floor(Math.random() * 6);
+        let TypeOfBlocks = Math.floor(Math.random() * 2);
         // [x, y, z]の形でブロックの位置を指定する。yはマイナスにならない
         const one = [[0, 0, 0]];
-        one.forEach((pos) => {
+        // 内容が25個の配列を作成
+        const two = [
+            [-2, 0, -2], [-2, 0, -1], [-2, 0, 0], [-2, 0, 1], [-2, 0, 2],
+            [-1, 0, -2], [-1, 0, -1], [-1, 0, 0], [-1, 0, 1], [-1, 0, 2],
+            [0, 0, -2], [0, 0, -1], [0, 0, 0], [0, 0, 1], [0, 0, 2],
+            [1, 0, -2], [1, 0, -1], [1, 0, 0], [1, 0, 1], [1, 0, 2],
+            [2, 0, -2], [2, 0, -1], [2, 0, 0], [2, 0, 1],
+        ];
+        // ランダムでoneかtwoを選択する
+        let got = TypeOfBlocks === 0 ? one : two;
+        got.forEach((pos) => {
             const block = this.getOneBlock();
             block.position.x = pos[0];
             block.position.y = pos[1] + 5.5;
