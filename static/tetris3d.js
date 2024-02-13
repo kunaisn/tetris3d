@@ -95,19 +95,23 @@ class Tetris3D {
         const render = () => {
             solidGridLine.visible = param.grid;
             axes.visible = param.axes;
+            // プレイ中か判定
             if (this.isPlay) {
-                let collosion = false;
-                this.blocks.children.forEach((block) => {
-                    collosion = this.isCollosion(block);
-                    this.fallBlock(block);
-                });
-                if (collosion && this.isContinue()) {
-                    this.stackBlocks();
-                    this.blocks.children.forEach((block) => {
-                        this.collided(block);
-                    });
+                if (this.isCollosion()) {
+                    // 衝突したかつゲーム続行可能ならば、ブロックを積む
+                    if (this.isContinue()) {
+                        this.stackBlocks();
+                        this.collided();
+                        this.setScore(this.score);
+                        console.log(this.stackBlocksAry);
+                    } else {
+                        // ゲームが続行不可能であれば、ゲームを終了する
+                        this.speed = 0;
+                        this.isPlay = false;
+                    }
+                } else {
+                    this.fallBlock();
                 }
-                this.setScore(this.score);
             }
             // 描画
             this.renderer.render(this.scene, this.camera);
@@ -159,7 +163,7 @@ class Tetris3D {
         // ランダムで7種類の形のどれかを選択する
         let TypeOfBlocks = Math.floor(Math.random() * 6);
         // [x, y, z]の形でブロックの位置を指定する。yはマイナスにならない
-        const one = [[0, 0, 0], [0, 1, 0], [1, 0, 0]];
+        const one = [[0, 0, 0]];
         one.forEach((pos) => {
             const block = this.getOneBlock();
             block.position.x = pos[0];
@@ -201,6 +205,7 @@ class Tetris3D {
 
     // ブロックの操作
     moveBlock = (event) => {
+        if (!this.isPlay) return;
         let move = true;
         let key = event.keyCode;
         if (key === 32 || this.speed === 0.3) {
@@ -230,12 +235,11 @@ class Tetris3D {
         this.blocks.children.forEach((block) => {
             const stackBlock = this.getOneBlock();
             stackBlock.position.x = Math.floor(block.position.x);
-            stackBlock.position.y = block.position.y;
+            stackBlock.position.y =  Math.floor(block.position.y) + 0.5;
             stackBlock.position.z = Math.floor(block.position.z);
             const x = stackBlock.position.x;
-            const y = Math.floor(stackBlock.position.y + 0.5);
+            const y = Math.floor(stackBlock.position.y);
             const z = stackBlock.position.z;
-            console.log(x + "," + y + "," + z);
             this.stackBlocksList[y].add(stackBlock);
             // 配列に同じものがなければ追加
             let stackStr = x + "," + z;
@@ -244,84 +248,78 @@ class Tetris3D {
     }
 
     // 衝突判定
-    isCollosion = (aBlock) => {
-        const x = Math.floor(aBlock.position.x);
-        const y = Math.floor(aBlock.position.y + 0.5);
-        const z = Math.floor(aBlock.position.z);
-        // ブロックの真下に、すでに積まれたブロックがあるか確認する
-        if (this.stackBlocksAry[y].includes(x + "," + z)) {
-            return true;
-        }
-        return false;
+    isCollosion = () => {
+        let colFlag = false;
+        this.blocks.children.forEach((aBlock) => {
+            const x = Math.floor(aBlock.position.x);
+            const y = Math.floor(aBlock.position.y + 0.5);
+            const z = Math.floor(aBlock.position.z);
+            // ブロックの真下に、すでに積まれたブロックがあるか確認する
+            if (this.stackBlocksAry[y].includes(x + "," + z)) {
+                colFlag = true;
+            }
+        });
+        return colFlag;
     }
 
     // ゲーム続行判定
     isContinue = () => {
+        let conFlag = true;
         this.blocks.children.forEach((block) => {
             const y = Math.floor(block.position.y + 0.5);
             if (y >= 5) {
-                this.speed = 0;
-                this.isPlay = false;
-                return false;
+                conFlag = false;
             }
         });
-        return true;
+        return conFlag;
     }
 
-    collided = (aBlock) => {
-        const y = Math.floor(aBlock.position.y + 0.5);
-        // ブロックが一面揃っているか判定
-        if (this.stackBlocksAry[y + 1].length >= 25) {
-            sleep(300);
-            // 揃った面より上のブロックを消去し、ブロックを一段ずつ下げ再描画する
-            switch (y + 1) {
-                case 1:
-                    stackBlocksGroup.remove(stackBlocks1);
-                    stackBlocks1 = stackBlocks6.clone();
-                    stackBlocksGroup.add(stackBlocks1);
-                case 2:
-                    stackBlocksGroup.remove(stackBlocks2);
-                    stackBlocks2 = stackBlocks6.clone();
-                    stackBlocksGroup.add(stackBlocks2);
-                case 3:
-                    stackBlocksGroup.remove(stackBlocks3);
-                    stackBlocks3 = stackBlocks6.clone();
-                    stackBlocksGroup.add(stackBlocks3);
-                case 4:
-                    stackBlocksGroup.remove(stackBlocks4);
-                    stackBlocks4 = stackBlocks6.clone();
-                    stackBlocksGroup.add(stackBlocks4);
-                case 5:
-                    stackBlocksGroup.remove(stackBlocks5);
-                    stackBlocks5 = stackBlocks6.clone();
-                    stackBlocksGroup.add(stackBlocks5);
-                    break;
-                default:
-            }
-            // 揃った面の当たり判定を消去して、一段ずつ下げる
-            stackBlocksAry.splice(y + 1, 1);
-            stackBlocksAry.push([]);
-            for (let i = y + 1; i < 6; i++) {
-                let len = stackBlocksAry[i].length;
-                for (let j = 0; j < len; j++) {
-                    let str = stackBlocksAry[i][j];
-                    let sx = Number(str.substring(0, str.indexOf(",")));
-                    let sz = Number(str.substring(str.indexOf(",") + 1));
-                    addBlock(sx, i - 1, sz);
-                    console.log(str);
+    collided = () => {
+        this.blocks.children.forEach((aBlock) => {
+            const y = Math.floor(aBlock.position.y + 0.5);
+            // ブロックが一面揃っているか判定
+            if (this.stackBlocksAry[y + 1].length >= 25) {
+                this.sleep(300);
+                // 揃った面より上のブロックを消去し、ブロックを一段ずつ下げ再描画する
+                for(let i = y; i < 5; i++) {
+                    this.scene.remove(this.stackBlocksList[i]);
+                    this.stackBlocksList[i] = new THREE.Group;
+                    this.scene.add(this.stackBlocksList[i]);
                 }
+                // 揃った面の当たり判定を消去して、一段ずつ下げる
+                this.stackBlocksAry.splice(y + 1, 1);
+                this.stackBlocksAry.push([]);
+                for (let i = y + 1; i < 6; i++) {
+                    for (let j = 0; j < this.stackBlocksAry[i].length; j++) {
+                        let str = this.stackBlocksAry[i][j];
+                        let sx = Number(str.substring(0, str.indexOf(",")));
+                        let sz = Number(str.substring(str.indexOf(",") + 1));
+                        this.addBlock(sx, i - 1, sz);
+                    }
+                }
+                score++;
             }
-            score++;
-        }
-        this.sleep(80);
-        this.createBlocks();
+            this.sleep(80);
+            this.createBlocks();
+        });
+    }
+
+    addBlock = (x, y, z) => {
+        const stackBlock = this.getOneBlock();
+        stackBlock.position.x = x;
+        stackBlock.position.y = y;
+        stackBlock.position.z = z;
+        this.stackBlocksList[y].add(stackBlock);
+        this.stackBlocksAry[y + 1].push(x + "," + z);
     }
 
     // ブロックを落とす
-    fallBlock = (aBlock) => {
-        const vBlock = new THREE.Vector3();
-        vBlock.set(0, -1, 0)
-        aBlock.position.addScaledVector(vBlock, this.speed);
+    fallBlock = () => {
+        this.blocks.children.forEach((aBlock) => {
+            const vBlock = new THREE.Vector3();
+            vBlock.set(0, -1, 0)
+            aBlock.position.addScaledVector(vBlock, this.speed);
+        });
     }
 }
 

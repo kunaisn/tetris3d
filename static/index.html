@@ -9,6 +9,8 @@
 		  body { margin: 0; background-color: #1d9292; color: gold}
 		  #status { font-size: x-large; color: gold;}
 		</style>
+		<!--ファビコンを指定-->
+		<link rel="icon" href="/static/favicon.png">
 	</head>
 	<body>
 		<div><table id="status">
@@ -23,10 +25,9 @@
 				"orbit": "https://unpkg.com/three@0.143.0/examples/jsm/controls/OrbitControls.js",
 				"CSS3D": "https://unpkg.com/three@0.143.0/examples/jsm/renderers/CSS3DRenderer.js",
 				"gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.17/+esm",
-				"gameStage": "./gameStage.js"
+				"gameStage": "/static/gameStage.js"
 			}
 		} </script>
-		<script type="module" src="tetris3d.js"></script>
+		<script type="module" src="/static/tetris3d.js"></script>
 	</body>
 </html>
-  
