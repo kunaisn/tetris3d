@@ -6,6 +6,6 @@
 
 ブロックの落とす　スペースキー
 
-~~https://tetris3d.kunaisn.net/~~ ※移行中
+https://tetris3d.kunaisn.net/
 
 上記サイトはリポジトリ内フォルダーstatic下のファイルを配置したものです。3dゲームのため、パソコンの負荷が高くなります。
